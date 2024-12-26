@@ -83,13 +83,13 @@ class MyApp extends StatelessWidget {
 
 **Explanation:**
 
-- The `@DefineWidget()` annotation on the `_myWidget` function will generate a `StatelessWidget` class named `MyWidget`
+- The `@DefineWidget()` annotation on the `myWidget` function generates a `StatelessWidget` class named `MyWidget`
 - The parameters `title` and `message` of the function become final fields on the `MyWidget` class
 - The `build` method of the generated `MyWidget` class will call the original `_myWidget` function
 
-## Additional information
+## Author
 
-This package is developed by Paurini Taketakehikuroa Wiringi (p4-k4 on GitHub).
+Paurini Taketakehikuroa Wiringi.
 
 - **GitHub Repository:** [https://github.com/p4-k4/flutter_package_function_widget](https://github.com/p4-k4/flutter_package_function_widget)
 - **Author:** Paurini Taketakehikuroa Wiringi
