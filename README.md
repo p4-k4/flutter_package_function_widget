@@ -25,7 +25,7 @@ environment:
 ```yaml
 dependencies:
   flutter_package_function_widget: ^0.0.1
-  macros: ^0.1.0
+  macros: ^0.1.3-main.0
 ```
 
 3. Enable macro support in your `analysis_options.yaml`:
