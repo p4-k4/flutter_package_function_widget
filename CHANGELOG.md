@@ -1,5 +1,10 @@
 ## 0.0.1
 
-* Implemented the DefineWidget macro to generate StatelessWidget from functions.
-* Renamed the macro from FunctionalWidget to DefineWidget.
-* Added documentation comments to the DefineWidget macro.
+Initial release of the flutter_package_function_widget package.
+
+### Features
+* Implemented the DefineWidget macro for generating StatelessWidget from functions
+* Support for both required and optional parameters
+* Proper handling of BuildContext
+* Clean, properly formatted generated code
+* Comprehensive test coverage

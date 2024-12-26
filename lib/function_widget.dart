@@ -1,68 +1,91 @@
 import 'package:macros/macros.dart';
 
-/// Annotates a function to generate a corresponding StatelessWidget.
+/// A macro that annotates a function, which becomes the build method for a
+/// generated stateless widget.
 ///
-/// The annotated function must:
-/// - Be a private function (start with an underscore).
-/// - Have `BuildContext` as its first positional parameter.
+/// The function must have at least one positional parameter, which is of type
+/// BuildContext (and this must be the first parameter).
 ///
-/// All other parameters of the function will be converted into final
-/// fields on the generated StatelessWidget.
-macro class DefineWidget implements FunctionDeclarationsMacro {
+/// Any additional function parameters are turned into fields on the stateless
+/// widget.
+macro class DefineWidget implements FunctionTypesMacro {
+  /// Optional identifier for the generated widget class.
+  /// Defaults to removing the leading `_` from the function name and calling
+  /// `toUpperCase` on the next character.
+  final Identifier? widgetIdentifier;
+
   /// Creates a new [DefineWidget] instance.
-  const DefineWidget();
+  const DefineWidget({this.widgetIdentifier});
 
   @override
-  Future<void> buildDeclarationsForFunction(
-    FunctionDeclaration function,
-    DeclarationBuilder builder,
-  ) async {
+  Future<void> buildTypesForFunction(
+      FunctionDeclaration function, TypeBuilder builder) async {
     if (!function.identifier.name.startsWith('_')) {
       throw ArgumentError(
           'DefineWidget should only be used on private declarations');
     }
     if (function.positionalParameters.isEmpty ||
-        function.positionalParameters.first.type.toString() != 'BuildContext') {
+        (function.positionalParameters.first.type as NamedTypeAnnotation)
+                .identifier
+                .name !=
+            'BuildContext') {
       throw ArgumentError(
-          'DefineWidget functions must have a BuildContext argument as the first positional argument');
+          'DefineWidget functions must have a BuildContext argument as the '
+          'first positional argument');
     }
 
-    final widgetName = function.identifier.name
-        .replaceRange(0, 1, function.identifier.name[1].toUpperCase());
+    var widgetName = widgetIdentifier?.name ??
+        function.identifier.name
+            .replaceRange(0, 2, function.identifier.name[1].toUpperCase());
+    var positionalFieldParams = function.positionalParameters.skip(1);
+    // ignore: deprecated_member_use
+    var statelessWidget = await builder.resolveIdentifier(
+        Uri.parse('package:flutter/src/widgets/framework.dart'), 'StatelessWidget');
+    // ignore: deprecated_member_use
+    var buildContext = await builder.resolveIdentifier(
+        Uri.parse('package:flutter/src/widgets/framework.dart'), 'BuildContext');
+    // ignore: deprecated_member_use
+    var widget = await builder.resolveIdentifier(
+        Uri.parse('package:flutter/src/widgets/framework.dart'), 'Widget');
+    // ignore: deprecated_member_use
+    var override = await builder.resolveIdentifier(
+        Uri.parse('dart:core'), 'override');
 
-    final positionalFieldParams = function.positionalParameters.skip(1);
-
-    final constructorParams = <String>[];
-    final fieldDeclarations = <String>[];
-    final buildArguments = <String>[];
-
-    for (final param in positionalFieldParams) {
-      fieldDeclarations.add('final ${param.type} ${param.identifier.name};');
-      constructorParams.add('required this.${param.identifier.name},');
-      buildArguments.add(param.identifier.name);
-    }
-
-    for (final param in function.namedParameters) {
-      fieldDeclarations.add('final ${param.type} ${param.identifier.name};');
-      constructorParams.add('${param.isRequired ? 'required ' : ''}this.${param.identifier.name},');
-      buildArguments.add('${param.identifier.name}: ${param.identifier.name}');
-    }
-
-    builder.declareInLibrary(
-      DeclarationCode.fromString('''
-import 'package:flutter/material.dart';
-
-class $widgetName extends StatelessWidget {
-  const $widgetName({super.key, ${constructorParams.join()}});
-
-  ${fieldDeclarations.join('\n  ')}
-
-  @override
-  Widget build(BuildContext context) {
-    return ${function.identifier.name}(context, ${buildArguments.join(', ')});
-  }
-}
-'''),
-    );
+    builder.declareType(
+        widgetName,
+        DeclarationCode.fromParts([
+          'class $widgetName extends ', statelessWidget, ' {',
+          // Fields
+          for (var param
+              in positionalFieldParams.followedBy(function.namedParameters))
+            DeclarationCode.fromParts([
+              'final ',
+              param.type.code,
+              ' ',
+              param.identifier.name,
+              ';',
+            ]),
+          // Constructor
+          'const $widgetName({',
+          'super.key,',
+          for (var param in positionalFieldParams)
+            'required this.${param.identifier.name},',
+          for (var param in function.namedParameters)
+            '${param.isRequired ? 'required ' : ''}this.${param.identifier.name},',
+          '});',
+          // Build method
+          DeclarationCode.fromParts(['@', override, '\n']),
+          DeclarationCode.fromParts([widget, ' build(', buildContext, ' context) {']),
+          '  return ',
+          function.identifier.name,
+          '(',
+          '    context,',
+          for (var param in positionalFieldParams) '    ${param.identifier.name},',
+          for (var param in function.namedParameters)
+            '    ${param.identifier.name}: ${param.identifier.name},',
+          '  );',
+          '}',
+          '}',
+        ]));
   }
 }
