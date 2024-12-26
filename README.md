@@ -40,7 +40,13 @@ analyzer:
 
 ## Usage
 
-Annotate a private function with `@DefineWidget()` to generate a corresponding `StatelessWidget`. The function must have `BuildContext` as its first positional parameter. Make sure to add the Dart 3.6 language version comment at the top of your file:
+Use `@DefineWidget()` to generate a StatelessWidget from a function. Important requirements:
+
+1. The function must be private (start with an underscore)
+2. The first parameter must be of type `BuildContext`
+3. Add the Dart 3.6 language version comment at the top of your file
+
+Example:
 
 ```dart
 // @dart=3.6
