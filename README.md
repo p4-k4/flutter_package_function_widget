@@ -12,22 +12,31 @@ A Flutter package that provides a macro to generate StatelessWidget from a funct
 
 ## Getting started
 
-To use this package, add `flutter_package_function_widget` as a dependency in your `pubspec.yaml` file:
+1. First, ensure you're using Dart SDK 3.6.0 or higher by updating your `pubspec.yaml`:
+
+```yaml
+environment:
+  sdk: ^3.6.0-0
+  flutter: ">=3.0.0"
+```
+
+2. Add `flutter_package_function_widget` as a dependency:
 
 ```yaml
 dependencies:
   flutter_package_function_widget: ^0.0.1
+  macros: ^0.1.0
 ```
 
-**Enable Macros:**
-
-Ensure that macro support is enabled in your project by adding the following to your `analysis_options.yaml` file:
+3. Enable macro support in your `analysis_options.yaml`:
 
 ```yaml
 analyzer:
   enable-experiment:
     - macros
 ```
+
+4. Run `flutter pub get` to update dependencies
 
 ## Usage
 
