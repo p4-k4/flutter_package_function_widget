@@ -24,7 +24,7 @@ environment:
 
 ```yaml
 dependencies:
-  flutter_package_function_widget: ^0.0.1
+  flutter_package_function_widget: ^0.0.1-dev.1
   macros: ^0.1.3-main.0
 ```
 
@@ -87,9 +87,7 @@ class MyApp extends StatelessWidget {
 - The parameters `title` and `message` of the function become final fields on the `MyWidget` class
 - The `build` method of the generated `MyWidget` class will call the original `_myWidget` function
 
-## Author
-
-Paurini Taketakehikuroa Wiringi.
+## Additional
 
 - **GitHub Repository:** [https://github.com/p4-k4/flutter_package_function_widget](https://github.com/p4-k4/flutter_package_function_widget)
 - **Author:** Paurini Taketakehikuroa Wiringi

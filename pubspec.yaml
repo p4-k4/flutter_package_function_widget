@@ -1,6 +1,6 @@
 name: function_widget
 description: A Flutter package that provides a macro to generate StatelessWidget from a function, reducing boilerplate code.
-version: 0.0.1
+version: 0.0.1-dev.1
 homepage: https://github.com/p4-k4/flutter_package_function_widget
 repository: https://github.com/p4-k4/flutter_package_function_widget
 
