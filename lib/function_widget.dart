@@ -1,18 +1,14 @@
 // @dart=3.6
 import 'package:macros/macros.dart';
 
-/// A macro that annotates a function, which becomes the build method for a
-/// generated stateless widget.
+/// A macro that generates a StatelessWidget from a function.
 ///
-/// The function must have at least one positional parameter, which is of type
-/// BuildContext (and this must be the first parameter).
-///
-/// Any additional function parameters are turned into fields on the stateless
-/// widget.
+/// The macro will create a widget class with the same name as your function
+/// (capitalized). The function must have a BuildContext as its first parameter.
+/// Any additional parameters will become fields on the generated widget.
 macro class DefineWidget implements FunctionTypesMacro {
   /// Optional identifier for the generated widget class.
-  /// Defaults to removing the leading `_` from the function name and calling
-  /// `toUpperCase` on the next character.
+  /// If not provided, the function name will be capitalized.
   final Identifier? widgetIdentifier;
 
   /// Creates a new [DefineWidget] instance.
@@ -21,10 +17,6 @@ macro class DefineWidget implements FunctionTypesMacro {
   @override
   Future<void> buildTypesForFunction(
       FunctionDeclaration function, TypeBuilder builder) async {
-    if (!function.identifier.name.startsWith('_')) {
-      throw ArgumentError(
-          'DefineWidget should only be used on private declarations');
-    }
     if (function.positionalParameters.isEmpty ||
         (function.positionalParameters.first.type as NamedTypeAnnotation)
                 .identifier
@@ -37,7 +29,7 @@ macro class DefineWidget implements FunctionTypesMacro {
 
     var widgetName = widgetIdentifier?.name ??
         function.identifier.name
-            .replaceRange(0, 2, function.identifier.name[1].toUpperCase());
+            .replaceRange(0, 1, function.identifier.name[0].toUpperCase());
     var positionalFieldParams = function.positionalParameters.skip(1);
     // ignore: deprecated_member_use
     var statelessWidget = await builder.resolveIdentifier(

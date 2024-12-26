@@ -40,11 +40,10 @@ analyzer:
 
 ## Usage
 
-Use `@DefineWidget()` to generate a StatelessWidget from a function. Important requirements:
+Use `@DefineWidget()` to generate a StatelessWidget from a function. The macro will create a widget class with the same name as your function (capitalized). Requirements:
 
-1. The function must be private (start with an underscore)
-2. The first parameter must be of type `BuildContext`
-3. Add the Dart 3.6 language version comment at the top of your file
+1. The first parameter must be of type `BuildContext`
+2. Add the Dart 3.6 language version comment at the top of your file
 
 Example:
 
@@ -54,7 +53,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_package_function_widget/function_widget.dart';
 
 @DefineWidget()
-Widget _myWidget(BuildContext context, String title, {String? message}) {
+Widget myWidget(BuildContext context, String title, {String? message}) {
   return Center(
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -66,7 +65,7 @@ Widget _myWidget(BuildContext context, String title, {String? message}) {
   );
 }
 
-// The macro will generate a StatelessWidget named 'MyWidget' that can be used like this:
+// The macro generates a StatelessWidget named 'MyWidget':
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 

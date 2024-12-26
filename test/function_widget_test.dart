@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:function_widget/function_widget.dart';
 
 @DefineWidget()
-Widget _testWidget(BuildContext context, String title, {String? message}) {
+Widget testWidget(BuildContext context, String title, {String? message}) {
   return Center(
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
