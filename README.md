@@ -40,9 +40,10 @@ analyzer:
 
 ## Usage
 
-Annotate a private function with `@DefineWidget()` to generate a corresponding `StatelessWidget`. The function must have `BuildContext` as its first positional parameter.
+Annotate a private function with `@DefineWidget()` to generate a corresponding `StatelessWidget`. The function must have `BuildContext` as its first positional parameter. Make sure to add the Dart 3.6 language version comment at the top of your file:
 
 ```dart
+// @dart=3.6
 import 'package:flutter/material.dart';
 import 'package:flutter_package_function_widget/function_widget.dart';
 

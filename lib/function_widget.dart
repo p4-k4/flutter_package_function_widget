@@ -1,3 +1,4 @@
+// @dart=3.6
 import 'package:macros/macros.dart';
 
 /// A macro that annotates a function, which becomes the build method for a
